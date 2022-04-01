@@ -124,6 +124,22 @@ public class BaseAction {
         Assert.assertTrue(element.getText().contains( expected));
     }
 
+// checkIfPageTitleContains
+    protected void checkIfPageTitleContains(String pageTitle, String expected) {
+        String message = "CHECK_IF" + pageTitle + "CONTAINS" + expected;
+        System.out.println(message);
+        Assert.assertTrue(pageTitle.contains(expected));
+    }
+
+//getPageTitle
+    @Step
+    protected String getPageTitle() {
+        String  title = driver.getTitle();
+        String message = "Page title is : " + title;
+        System.out.println(message);
+        return title;
+    }
+
 //waitUntilUrlContain
     @Step
     protected void waitUntilUrlContains(String url) {

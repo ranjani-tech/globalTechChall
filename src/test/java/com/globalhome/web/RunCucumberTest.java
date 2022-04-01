@@ -36,6 +36,7 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PUBLISH_QUIET_P
 public class RunCucumberTest {
     private DriverProvider driverProvider;
     private PropertiesProvider propertiesProvider;
+
     @Before
     public void before(Scenario scenario) throws IOException {
         propertiesProvider = new PropertiesProvider();

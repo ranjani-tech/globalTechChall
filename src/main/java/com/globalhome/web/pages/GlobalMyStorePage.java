@@ -10,9 +10,6 @@ import org.testng.Assert;
 
 public class GlobalMyStorePage extends BasePage {
 
-    @FindBy(xpath = "//a[text()='My Store']")
-    WebElement pageTitleElement;
-
 
     //constructor
     public GlobalMyStorePage(WebDriver driver) {
@@ -26,8 +23,11 @@ public class GlobalMyStorePage extends BasePage {
         waitUntilUrlContains(PropertiesProvider.getProperties().getProperty("starturl"));
     }
 
-    public void selectPageTitle(String pageTitle) {
-        waitUntilElementVisible(pageTitleElement);
-        waitUntilUrlContains("index");
+    public void selectPageTitle(String getPageTitle) {
+        waitUntilUrlContains("index.php");
+        checkIfPageTitleContains(getPageTitle(),"My Store");
     }
+
+
+
 }
