@@ -9,17 +9,20 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions.*;
 
 public class StepDefinitions {
-        private final GlobalMyStorePage MyStoreProductPage;
+    private final GlobalMyStorePage MyStoreProductPage;
 
-        //Constructor
-        public StepDefinitions(){
-            MyStoreProductPage = new GlobalMyStorePage(DriverProvider.getDriver());
+//Constructor
+    public StepDefinitions(){
+        MyStoreProductPage = new GlobalMyStorePage(DriverProvider.getDriver());
         }
 
-        @Given("User is on my store product home page")
+    @Given("User is on my store product home page")
         public void user_Is_On_My_Store_Product_Home_Page() {
             MyStoreProductPage.openStartPage();
         }
 
-
+    @When("user verify the page title {string}")
+    public void userVerifyThePageTitle(String pageTitle) {
+            MyStoreProductPage.selectPageTitle(pageTitle);
     }
+}
