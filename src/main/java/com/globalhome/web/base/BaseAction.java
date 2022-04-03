@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.time.Duration;
+import java.util.List;
 
 
 public class BaseAction {
@@ -17,6 +18,34 @@ public class BaseAction {
 
     public BaseAction(WebDriver driver) {
         this.driver = driver;
+    }
+
+    protected List<WebElement> find_elements_by_xpath(WebElement inElement, String xPath) {
+        List<WebElement> elements = null;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            //wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy((By) inElement.findElements(By.xpath(xPath))));
+            elements = inElement.findElements(By.xpath(xPath));
+        } catch (Exception e) {
+            System.out.println("Exception on xPath element" + xPath);
+            System.out.println(e.getMessage());
+        }
+        return elements;
+    }
+
+
+    //find_element_by_xpath Method:
+    protected List<WebElement> find_elements_by_xpath(String xPath) {
+        List<WebElement> elements = null;
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(xPath)));
+            elements =driver.findElements(By.xpath(xPath));
+        } catch (Exception e) {
+            System.out.println("Exception on xPath element" + xPath);
+            System.out.println(e.getMessage());
+        }
+        return elements;
     }
 
 //find_element_by_xpath Method:
@@ -33,12 +62,25 @@ public class BaseAction {
         return element;
     }
 
-//selectByVisibleTextInDropDown Method:
+    //selectByVisibleTextInDropDown Method:
     protected void selectByVisibleTextInDropDown(WebElement element, String value) {
         try {
             //clickOn(element);
             Select objSelect = new Select(element);
             objSelect.selectByVisibleText(value);
+            //clickOn(element);
+        } catch (NoSuchElementException e) {
+            System.out.println("NoSuchElementException on selecting value " + value + " for element " + element);
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //selectByValueInDropDown Method:
+    protected void selectByValueInDropDown(WebElement element, String value) {
+        try {
+            //clickOn(element);
+            Select objSelect = new Select(element);
+            objSelect.selectByValue(value);
             //clickOn(element);
         } catch (NoSuchElementException e) {
             System.out.println("NoSuchElementException on selecting value " + value + " for element " + element);
@@ -72,7 +114,31 @@ public class BaseAction {
         }
     }
 
-//focusAndClickElement:
+    protected void clickElement(WebElement element){
+        Actions actions = new Actions(driver);
+        actions.click(element).build().perform();
+    }
+    protected void doubleClickElement(WebElement element){
+        Actions actions = new Actions(driver);
+        actions.doubleClick(element).perform();
+    }
+
+    protected void moveElement(WebElement element){
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).perform();
+    }
+
+    protected void waitUntilTextChange(WebElement element,String value) {
+       try {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.textToBePresentInElement(element, value));
+        } catch (Exception e) {
+            System.out.println("Exception on element to get " + value);
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //focusAndClickElement:
     protected void focusAndClickElement(WebElement element){
 
         Point p= element.getLocation();
@@ -102,6 +168,7 @@ public class BaseAction {
     }
 
 //goToWeb Method:
+    @Step
     protected void goToWeb(String url) {
         driver.get(url);
         String message = "Landing to Web Page: " + url;
@@ -109,6 +176,7 @@ public class BaseAction {
     }
 
 //checkIfTextIsExpected Method:
+    @Step
     protected void checkIfTextIsExpected(WebElement element, String expected) {
         Assert.assertEquals(element.getText(), expected);
         String message = "Text is expected: " + expected;
@@ -116,6 +184,7 @@ public class BaseAction {
     }
 
 //checkIfTextContainsExpected Method:
+    @Step
     protected void checkIfTextContainsExpected(WebElement element, String expected) {
         String message;
         message = "Text is actual: " + element.getText();
@@ -125,6 +194,7 @@ public class BaseAction {
     }
 
 // checkIfPageTitleContains
+    @Step
     protected void checkIfPageTitleContains(String pageTitle, String expected) {
         String message = "CHECK_IF" + pageTitle + "CONTAINS" + expected;
         System.out.println(message);
@@ -158,12 +228,46 @@ public class BaseAction {
         System.out.println(message);
     }
 
-//waitUntilElementVisible Method:
+    //waitUntilElementVisible Method:
     @Step
     protected void waitUntilElementVisible(WebElement element) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.visibilityOf(element));
         String message = "wait until " + element + " is visible";
+        System.out.println(message);
+    }
+
+    @Step
+    protected void waitUntilTextInElementInvisible(String xPath, String textValue) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath(xPath),textValue));
+        String message = "wait until " + xPath + " textValue " + textValue + " is visible";
+        System.out.println(message);
+    }
+
+
+    @Step
+    protected void waitUntilElementsVisible(List<WebElement> elements) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.visibilityOfAllElements(elements));
+        String message = "wait until all elements are visible";
+        System.out.println(message);
+    }
+
+
+    //waitUntilElementSelectable Method:
+    @Step
+    protected void waitUntilElementSelectable(WebElement element) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.elementToBeSelected(element));
+        String message = "wait until " + element + " is selectable";
+        System.out.println(message);
+    }
+    @Step
+    protected void waitUntilElementInvisible(String elementXpath) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(elementXpath)));
+        String message = "wait until " + elementXpath + " is invisible";
         System.out.println(message);
     }
 
